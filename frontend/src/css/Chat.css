@@ -1,0 +1,87 @@
+body {
+    overflow-y: scroll;
+    /* Добавляем скролл к странице */
+}
+
+.chat-container {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column-reverse;
+    /* Переворачиваем направление контейнера */
+    overflow-y: auto;
+    /* Убираем скролл из контейнера чата */
+    position: relative;
+    padding-bottom: 60px;
+    padding-top: 20px;
+}
+
+
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message {
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 40%;
+    margin-bottom: 10px;
+    word-wrap: break-word;
+    /* Переносим длинные слова на новую строку */
+}
+
+.message.user {
+    align-self: flex-end;
+    background-color: #FFDB01;
+    color: black;
+}
+
+.message.bank {
+    align-self: flex-start;
+    background-color: #F3F3F5;
+    color: black;
+}
+
+.chat-form {
+    position: fixed;
+    bottom: 0;
+    /* Прикрепляем форму ввода к нижнему краю экрана */
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    background-color: #f0f0f0;
+    display: flex;
+    gap: 10px;
+}
+
+.chat-form input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.chat-form button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #D9D9D9;
+    color: white;
+    cursor: pointer;
+}
+
+.chat-form button:hover {
+    background-color: #283038;
+}
+
+.message.bank.incoming {
+    align-self: flex-start;
+    background-color: #f0f0f0;
+    color: black;
+}
+
+.message.error .message-text {
+    color: red;
+}
