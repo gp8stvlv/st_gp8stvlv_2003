@@ -81,7 +81,6 @@ wss.on('connection', (websocketConnection, req) => {
         const message = JSON.parse(messageString);
         message.sender = message.sender ?? sender;
 
-        message.error = true
         console.log('ws oned', message)
 
         if (message.payload != '' && message.payload != undefined) {
