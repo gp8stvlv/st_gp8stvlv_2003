@@ -85,3 +85,16 @@ body {
 .message.error .message-text {
     color: red;
 }
+
+.chat-wrapper {
+    position: relative;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    background-color: #fff;
+}

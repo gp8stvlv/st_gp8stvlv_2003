@@ -14,7 +14,7 @@ app.post('/receive', (req, res) => {
     const message = req.body;
     console.log('body: ', message);
 
-    sendMessageToOtherUsers(message.username, message);
+    sendMessageToOtherUsers(message.sender, message);
     res.sendStatus(200);
 });
 
@@ -31,7 +31,7 @@ const sendMsgToTransportLevel = async (message) => {
         const response = await axios.post(`http://${HOSTNAME_TRANSPORT_LEVEL}:${PORT_TRANSPORT_LEVEL}/send`, message);
         if (response.status !== 200) {
             message.error = 'Error from transport level by sending message';
-            users[message.username].forEach(element => {
+            users[message.sender].forEach(element => {
                 if (message.id === element.id) {
                     element.ws.send(JSON.stringify(message));
                 }
@@ -43,10 +43,10 @@ const sendMsgToTransportLevel = async (message) => {
     }
 };
 
-function sendMessageToOtherUsers(username, message) {
+function sendMessageToOtherUsers(sender, message) {
     const msgString = JSON.stringify(message);
     for (const key in users) {
-        if (key !== username) { // Отправляем всем пользователям, кроме отправителя
+        if (key !== sender) { // Отправляем всем пользователям, кроме отправителя
             users[key].forEach(element => {
                 element.ws.send(msgString);
             });
@@ -61,33 +61,33 @@ wss.on('connection', (websocketConnection, req) => {
     }
 
     const url = new URL(req.url, `http://${req.headers.host}`);
-    const username = url.searchParams.get('username');
+    const sender = url.searchParams.get('username');
 
-    if (username !== null) {
-        console.log(`[open] Connected, username: ${username}`);
+    if (sender !== null) {
+        console.log(`[open] Connected, sender: ${sender}`);
 
-        if (users[username]) {
-            users[username].push({ id: users[username].length, ws: websocketConnection });
+        if (users[sender]) {
+            users[sender].push({ id: users[sender].length, ws: websocketConnection });
         } else {
-            users[username] = [{ id: 1, ws: websocketConnection }];
+            users[sender] = [{ id: 1, ws: websocketConnection }];
         }
     } else {
         console.log('[open] Connected');
     }
 
     websocketConnection.on('message', (messageString) => {
-        console.log('[message] Received from ' + username + ': ' + messageString);
+        console.log('[message] Received from ' + sender + ': ' + messageString);
 
         const message = JSON.parse(messageString);
-        message.username = message.username ?? username;
+        message.sender = message.sender ?? sender;
 
-        // sendMessageToOtherUsers(username, message); // Отправляем сообщение другим пользователям
-        sendMsgToTransportLevel(message);
+        sendMessageToOtherUsers(sender, message); // Отправляем сообщение другим пользователям
+        // sendMsgToTransportLevel(message);
     });
 
     websocketConnection.on('close', (event) => {
-        console.log(username, '[close] Connection closed', event);
+        console.log(sender, '[close] Connection closed', event);
 
-        delete users[username];
+        delete users[sender];
     });
 });
