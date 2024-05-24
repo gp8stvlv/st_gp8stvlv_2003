@@ -45,8 +45,6 @@ const sendMsgToTransportLevel = async (message) => {
 
 function sendMessageToOtherUsers(sender, message) {
     const msgString = JSON.stringify(message);
-    console.log("sendMessageToOtherUsers", sender)
-    console.log("sendMessageToOtherUsers", message)
     for (const key in users) {
         if (key !== sender) { // Отправляем всем пользователям, кроме отправителя
             users[key].forEach(element => {
@@ -83,6 +81,7 @@ wss.on('connection', (websocketConnection, req) => {
         const message = JSON.parse(messageString);
         message.sender = message.sender ?? sender;
 
+        message.error = true
         console.log('ws oned', message)
 
         if (message.payload != '' && message.payload != undefined) {

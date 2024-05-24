@@ -36,3 +36,10 @@
     color: gray;
     align-self: flex-end;
 }
+
+.error {
+    color: red;
+    /* Цвет текста красный */
+    font-style: italic;
+    /* Курсивное начертание */
+}
