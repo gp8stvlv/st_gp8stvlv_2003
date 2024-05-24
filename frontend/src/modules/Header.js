@@ -2,7 +2,7 @@ import React from 'react';
 import '../css/Header.css';
 import logoImage from '../assert/bankIcon.png';
 
-const Header = ({ bankName, userName, onLogin, onLogout }) => {
+const Header = ({ bankName, sender, onLogin, onLogout }) => {
     return (
         <header className="header">
             <div className="bank-info">
@@ -10,9 +10,9 @@ const Header = ({ bankName, userName, onLogin, onLogout }) => {
                 <h1 className="bank-name">{bankName}</h1>
             </div>
             <div className="user-info">
-                {userName ? (
+                {sender ? (
                     <>
-                        <span className="user-name">{userName}</span>
+                        <span className="user-name">{sender}</span>
                         <button className="logout-button" onClick={onLogout}>Выйти</button>
                     </>
                 ) : (

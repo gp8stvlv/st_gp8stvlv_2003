@@ -25,7 +25,7 @@ server.listen(PORT, HOSTNAME, () => {
 const wss = new ws.WebSocketServer({ server });
 const users = {};
 
-// взаимодействие с транспортным уровнем
+// взаимодействие с транспортным уровнемrece
 const sendMsgToTransportLevel = async (message) => {
     try {
         const response = await axios.post(`http://${HOSTNAME_TRANSPORT_LEVEL}:${PORT_TRANSPORT_LEVEL}/send`, message);
@@ -45,6 +45,8 @@ const sendMsgToTransportLevel = async (message) => {
 
 function sendMessageToOtherUsers(sender, message) {
     const msgString = JSON.stringify(message);
+    console.log("sendMessageToOtherUsers", sender)
+    console.log("sendMessageToOtherUsers", message)
     for (const key in users) {
         if (key !== sender) { // Отправляем всем пользователям, кроме отправителя
             users[key].forEach(element => {
@@ -61,7 +63,7 @@ wss.on('connection', (websocketConnection, req) => {
     }
 
     const url = new URL(req.url, `http://${req.headers.host}`);
-    const sender = url.searchParams.get('username');
+    const sender = url.searchParams.get('sender');
 
     if (sender !== null) {
         console.log(`[open] Connected, sender: ${sender}`);

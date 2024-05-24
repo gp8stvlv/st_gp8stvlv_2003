@@ -1,5 +1,5 @@
-export const connectToServer = (userName) => {
-    const SERVER_URL = `ws://localhost:8081?username=${userName}`;
+export const connectToServer = (sender) => {
+    const SERVER_URL = `ws://localhost:8081?sender=${sender}`;
 
     const socket = new WebSocket(SERVER_URL); // экземпляр WebSocket
 
@@ -7,7 +7,7 @@ export const connectToServer = (userName) => {
     socket.onopen = () => {
         console.log('Соединение установлено');
         // Отправляем данные аутентификации на сервер, например, имя пользователя
-        socket.send(JSON.stringify({ type: 'authentication', username: userName }));
+        socket.send(JSON.stringify({ type: 'authentication', sender: sender }));
     };
 
     // Обработчик события при получении сообщения от сервера

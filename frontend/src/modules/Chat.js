@@ -8,14 +8,14 @@ import { connectToServer } from '../api/server';
 const Chat = () => {
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
-    const [userName, setUserName] = useState('');
+    const [sender, setsender] = useState('');
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const messagesEndRef = useRef(null);
     const wsRef = useRef(null);
 
     useEffect(() => {
-        if (userName) {
-            const ws = connectToServer(userName);
+        if (sender) {
+            const ws = connectToServer(sender);
             wsRef.current = ws;
 
             ws.onmessage = (event) => {
@@ -28,14 +28,14 @@ const Chat = () => {
                 ws.close();
             };
         }
-    }, [userName]);
+    }, [sender]);
 
     const handleLogin = (name) => {
-        setUserName(name);
+        setsender(name);
     };
 
     const handleLogout = () => {
-        setUserName('');
+        setsender('');
         setMessages([]); // Clear messages on logout
         if (wsRef.current) {
             wsRef.current.close();
@@ -47,7 +47,7 @@ const Chat = () => {
         if (inputValue.trim() !== '') {
             const message = {
                 payload: inputValue,
-                sender: userName,
+                sender: sender,
                 senderType: 'user',
                 time: new Date().toLocaleTimeString(),
                 error: false
@@ -66,7 +66,7 @@ const Chat = () => {
 
     return (
         <div className="chat-wrapper"> {/* Wrap chat content */}
-            <Header bankName="Райффайзен Банк" userName={userName} onLogout={handleLogout} onLogin={() => setIsLoginModalOpen(true)} />
+            <Header bankName="Райффайзен Банк" sender={sender} onLogout={handleLogout} onLogin={() => setIsLoginModalOpen(true)} />
             <div className="chat-container">
                 <div className="chat-messages">
                     {messages.map((msg, index) => (
@@ -74,7 +74,7 @@ const Chat = () => {
                     ))}
                     <div ref={messagesEndRef} />
                 </div>
-                {userName && (
+                {sender && (
                     <form className="chat-form" onSubmit={handleMessageSubmit}>
                         <input
                             type="text"
