@@ -1,9 +1,13 @@
+const { default: axios } = require('axios');
 const express = require('express');
 const http = require('http');
 const ws = require('ws');
 
-const PORT = 8081;
-const HOSTNAME = 'localhost';
+const PORT = 8082;
+const HOSTNAME = '0.0.0.0';
+
+const HOSTNAME_TRANSPORT_LEVEL = '172.20.10.2';
+const PORT_TRANSPORT_LEVEL = 8000;
 
 const app = express();
 const server = http.createServer(app);
@@ -39,7 +43,7 @@ const sendMsgToTransportLevel = async (message) => {
         }
         console.log('Response from transport level: ', response.data);
     } catch (error) {
-        console.error('Error sending message to transport level:', error.message);
+        console.error('Error sending message to transport level:', error);
     }
 };
 
@@ -81,12 +85,11 @@ wss.on('connection', (websocketConnection, req) => {
         const message = JSON.parse(messageString);
         message.sender = message.sender ?? sender;
 
-        console.log('ws oned', message)
-
         if (message.payload != '' && message.payload != undefined) {
-            sendMessageToOtherUsers(sender, message); // Отправляем сообщение другим пользователям
+            // sendMessageToOtherUsers(sender, message); // Отправляем сообщение другим пользователям
+            sendMsgToTransportLevel(message);
         }
-        // sendMsgToTransportLevel(message);
+
     });
 
     websocketConnection.on('close', (event) => {

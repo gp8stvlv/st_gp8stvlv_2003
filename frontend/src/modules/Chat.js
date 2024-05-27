@@ -49,7 +49,7 @@ const Chat = () => {
                 payload: inputValue,
                 sender: sender,
                 senderType: 'user',
-                time: new Date().toLocaleTimeString(),
+                send_time: Date.now().toString(),//new Date().toLocaleTimeString(),
                 error: false
             };
             wsRef.current.send(JSON.stringify(message));
@@ -59,6 +59,7 @@ const Chat = () => {
     };
 
     useEffect(() => {
+        console.log(messages)
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
@@ -70,7 +71,7 @@ const Chat = () => {
             <div className="chat-container">
                 <div className="chat-messages">
                     {messages.map((msg, index) => (
-                        <ChatMessage key={index} message={msg.payload} sender={msg.sender} time={msg.time} senderType={msg.senderType} error={msg.error} />
+                        <ChatMessage key={index} message={msg.payload} sender={msg.sender} timestamp={msg.send_time / 1} senderType={msg.senderType} error={msg.has_error} />
                     ))}
                     <div ref={messagesEndRef} />
                 </div>
